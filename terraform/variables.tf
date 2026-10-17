@@ -73,6 +73,12 @@ variable "create_anomaly_monitor" {
   default     = true
 }
 
+variable "existing_anomaly_monitor_arn" {
+  description = "ARN of an existing anomaly monitor to alert on when create_anomaly_monitor is false."
+  type        = string
+  default     = ""
+}
+
 variable "anomaly_threshold_usd" {
   description = "Alert when an anomaly's total impact is at least this many dollars."
   type        = number

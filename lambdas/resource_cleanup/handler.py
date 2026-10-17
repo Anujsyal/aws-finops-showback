@@ -14,7 +14,7 @@ Safety:
 import json
 import logging
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import boto3
 from botocore.exceptions import ClientError
@@ -28,9 +28,9 @@ def is_protected(tag_list, keep_key="Keep"):
 
 
 def older_than(ts, days, now=None):
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     if isinstance(ts, str):
-        ts = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        ts = datetime.fromisoformat(ts)
     return ts < now - timedelta(days=days)
 
 
@@ -130,7 +130,7 @@ def lambda_handler(event, context):
     for aid in plan["elastic_ips"]:
         act(f"release Elastic IP {aid}", ec2.release_address, AllocationId=aid)
 
-    today = datetime.now(timezone.utc).date().isoformat()
+    today = datetime.now(UTC).date().isoformat()
     key = f"reports/cleanup/{today}.json"
     report = {"date": today, "dry_run": dry_run, "plan": plan, "actions": actions, "errors": errors}
     boto3.client("s3").put_object(Bucket=bucket, Key=key, Body=json.dumps(report, indent=2).encode(),

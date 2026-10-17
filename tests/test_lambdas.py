@@ -1,7 +1,7 @@
 """Unit tests for the pure logic in each Lambda (no AWS calls needed)."""
 
 import importlib.util
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1] / "lambdas"
@@ -19,7 +19,7 @@ tags = load("tag_compliance")
 cleanup = load("resource_cleanup")
 rightsizing = load("rightsizing")
 
-NOW = datetime(2026, 10, 17, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 17, tzinfo=UTC)
 
 
 # ---- showback_report -------------------------------------------------------

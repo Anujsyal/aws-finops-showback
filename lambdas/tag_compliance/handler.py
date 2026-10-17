@@ -11,7 +11,7 @@ Querying each service directly catches those.
 import json
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import boto3
 from botocore.exceptions import ClientError
@@ -95,7 +95,7 @@ def lambda_handler(event, context):
         + scan_snapshots(ec2, required) + scan_buckets(s3, required, region)
     )
 
-    today = datetime.now(timezone.utc).date().isoformat()
+    today = datetime.now(UTC).date().isoformat()
     key = f"reports/tag-compliance/{today}.json"
     report = {"date": today, "required_tags": required, "non_compliant": findings}
     boto3.client("s3").put_object(

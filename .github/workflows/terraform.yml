@@ -21,6 +21,8 @@ concurrency:
 env:
   TF_IN_AUTOMATION: "true"
   TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}
+  TF_VAR_create_anomaly_monitor: ${{ vars.CREATE_ANOMALY_MONITOR || 'true' }}
+  TF_VAR_existing_anomaly_monitor_arn: ${{ vars.EXISTING_ANOMALY_MONITOR_ARN }}
   AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
 
 defaults:
@@ -37,7 +39,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "~1.10"
+          terraform_version: "~1.13"
 
       - name: Configure AWS credentials (OIDC, no stored keys)
         uses: aws-actions/configure-aws-credentials@v4
@@ -97,7 +99,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "~1.10"
+          terraform_version: "~1.13"
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:

@@ -74,7 +74,7 @@ aws-finops-showback/
 ### Prerequisites
 - AWS account with a **$5 billing alert** already set (do this first)
 - An IAM user (not root) with admin rights for the one-time bootstrap, configured with `aws configure`
-- Terraform >= 1.10, AWS CLI v2, Python 3.12, Git
+- Terraform >= 1.13, AWS CLI v2, Python 3.12, Git
 
 ### 1. Bootstrap (once, from your laptop)
 ```bash

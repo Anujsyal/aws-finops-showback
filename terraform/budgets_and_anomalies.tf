@@ -63,11 +63,14 @@ resource "aws_ce_anomaly_monitor" "services" {
   monitor_dimension = "SERVICE"
 }
 
+# Attaches to our monitor, or to an existing one when the account already has it.
 resource "aws_ce_anomaly_subscription" "email" {
-  count            = var.create_anomaly_monitor ? 1 : 0
-  name             = "${var.project}-anomaly-alerts"
-  frequency        = "DAILY"
-  monitor_arn_list = [aws_ce_anomaly_monitor.services[0].arn]
+  count     = var.create_anomaly_monitor || var.existing_anomaly_monitor_arn != "" ? 1 : 0
+  name      = "${var.project}-anomaly-alerts"
+  frequency = "DAILY"
+  monitor_arn_list = [
+    var.create_anomaly_monitor ? aws_ce_anomaly_monitor.services[0].arn : var.existing_anomaly_monitor_arn
+  ]
 
   subscriber {
     type    = "EMAIL"

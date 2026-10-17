@@ -10,7 +10,7 @@ workloads, so a human decides. That's a deliberate design choice.
 import json
 import logging
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import boto3
 
@@ -56,7 +56,7 @@ def lambda_handler(event, context):
     topic_arn = os.environ["SNS_TOPIC_ARN"]
 
     ec2, cw = boto3.client("ec2"), boto3.client("cloudwatch")
-    end = datetime.now(timezone.utc)
+    end = datetime.now(UTC)
     start = end - timedelta(days=lookback)
 
     recs = []
@@ -74,7 +74,7 @@ def lambda_handler(event, context):
                 if rec:
                     recs.append(rec)
 
-    today = datetime.now(timezone.utc).date().isoformat()
+    today = datetime.now(UTC).date().isoformat()
     key = f"reports/rightsizing/{today}.json"
     report = {"date": today, "threshold_percent": threshold, "lookback_days": lookback, "recommendations": recs}
     boto3.client("s3").put_object(Bucket=bucket, Key=key, Body=json.dumps(report, indent=2).encode(),

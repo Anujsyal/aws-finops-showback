@@ -12,7 +12,7 @@ import io
 import json
 import logging
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import boto3
 
@@ -85,7 +85,7 @@ def lambda_handler(event, context):
     tag_key = os.environ.get("COST_TAG_KEY", "Team")
     lookback = int(os.environ.get("LOOKBACK_DAYS", "7"))
 
-    end = datetime.now(timezone.utc).date()
+    end = datetime.now(UTC).date()
     start = end - timedelta(days=lookback)
     start_s, end_s = start.isoformat(), end.isoformat()  # End is exclusive in CE
 
