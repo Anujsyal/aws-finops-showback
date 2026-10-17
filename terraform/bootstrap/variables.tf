@@ -21,3 +21,9 @@ variable "github_repo" {
   type        = string
   default     = "Anujsyal/aws-finops-showback"
 }
+
+variable "github_repo_with_ids" {
+  description = "Same repository in GitHub's immutable-ID form, owner@owner_id/name@repo_id (see the sub claim in CloudTrail). Empty to skip."
+  type        = string
+  default     = "Anujsyal@86842727/aws-finops-showback@1423128205"
+}

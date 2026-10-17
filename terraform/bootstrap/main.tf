@@ -97,11 +97,17 @@ data "aws_iam_policy_document" "github_trust" {
       variable = "token.actions.githubusercontent.com:aud"
       values   = ["sts.amazonaws.com"]
     }
-    # Only workflows from YOUR repository can assume this role.
+    # Only workflows from YOUR repository can assume this role. Newer GitHub
+    # tokens put immutable IDs in the subject (repo:owner@id/name@id:...), so
+    # both formats are allowed. Pinning the IDs means a re-created repo with
+    # the same name cannot take over the role.
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:*"]
+      values = compact([
+        "repo:${var.github_repo}:*",
+        var.github_repo_with_ids != "" ? "repo:${var.github_repo_with_ids}:*" : "",
+      ])
     }
   }
 }
