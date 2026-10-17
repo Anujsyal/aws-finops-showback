@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars (git-ignored) and fill in.
+alert_email = "you@example.com"
+owner       = "anuj"
+
+# Turn on only while testing rightsizing, then turn off again.
+demo_ec2_enabled = false
+
+# Flip to true 24-48h after the first apply (see README, step 6).
+activate_cost_allocation_tags = false
+
+# Keep true until you have read a few dry-run reports.
+cleanup_dry_run = true
