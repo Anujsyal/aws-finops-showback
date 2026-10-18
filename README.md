@@ -162,13 +162,37 @@ AWS Showback Report (2026-10-10 to 2026-10-17)
   TOTAL                $    0.0857
 ```
 
-<!-- Add screenshots to docs/ and link them here:
+## Screenshots
+
+**CI/CD: plan, then apply after manual approval (GitHub OIDC, no AWS keys)**
+![GitHub Actions pipeline](docs/github-actions-pipeline.png)
+
+**Tag compliance alert: the deliberately untagged volume is caught**
+![Tag compliance email](docs/tag-compliance-email.png)
+
+**Scheduled cleanup (daily 10:00 IST via EventBridge), dry-run report by email**
+![Scheduled cleanup email](docs/cleanup-email-scheduled.png)
+
+**Per-team budgets created by Terraform**
+![Team budgets](docs/team-budgets.png)
+
+**The four Lambdas (Python 3.12) deployed by Terraform**
+![Lambda functions](docs/lambda-functions.png)
+
+**Reports bucket, per-team buckets and the Terraform state bucket (ap-south-1)**
+![S3 buckets](docs/s3-buckets.png)
+
+<!-- After cost allocation tags are active, add:
 ![Showback email](docs/showback-email.png)
 ![Cost Explorer by Team](docs/cost-explorer-team.png)
 -->
 
 ## What I learned
-- _Fill this in after building: e.g. how cost allocation tags propagate, why tagging must be enforced at creation time, trade-offs of auto-remediation._
+- **GitHub's OIDC subject format changed.** The role trust policy matched `repo:owner/name:*`, but newer tokens send `repo:owner@<owner_id>/name@<repo_id>:...`, so the first pipeline run got `AccessDenied`. I found the real subject in CloudTrail (`AssumeRoleWithWebIdentity` events) and allowed both forms, pinning the IDs so a re-created repo with the same name cannot assume the role.
+- **Some AWS resources are one-per-account.** AWS had already created a default "AWS services" anomaly monitor, so creating a second one failed. The Terraform now attaches the alert subscription to the existing monitor instead.
+- **Git-ignored tfvars do not reach CI.** Settings that differ from the defaults have to be passed to the pipeline as `TF_VAR_*` repo variables, or local and CI plans disagree.
+- **Cost allocation tags are not instant.** A tag can only be activated after it appears in billing data, so showback by team only works a day or two after the first deploy.
+- **Auto-remediation needs guard rails.** Cleanup is dry-run by default and honours a `Keep=true` tag, because deleting the wrong snapshot is worse than not cleaning up at all.
 
 ## Running tests
 ```bash
