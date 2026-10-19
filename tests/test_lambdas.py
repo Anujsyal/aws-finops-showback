@@ -44,6 +44,18 @@ def test_summary_mentions_untagged_spend():
     assert "TOTAL" in summary and "untagged spend" in summary
 
 
+def test_get_costs_excludes_credits_and_refunds():
+    class FakeCE:
+        def get_cost_and_usage(self, **kwargs):
+            self.kwargs = kwargs
+            return {"ResultsByTime": []}
+
+    ce = FakeCE()
+    showback.get_costs(ce, "2026-10-12", "2026-10-19", "Team")
+    excluded = ce.kwargs["Filter"]["Not"]["Dimensions"]
+    assert excluded["Key"] == "RECORD_TYPE" and {"Credit", "Refund"} <= set(excluded["Values"])
+
+
 # ---- tag_compliance --------------------------------------------------------
 def test_missing_tags_treats_blank_values_as_missing():
     assert tags.missing_tags({"Team": "x", "Owner": " "}, ["Team", "Owner", "Project"]) == ["Owner", "Project"]

@@ -21,6 +21,10 @@ logger.setLevel(logging.INFO)
 
 UNTAGGED_LABEL = "(untagged)"
 
+# Showback reports what teams used, not what the bill came to after credits,
+# so promotional credits and refunds are left out.
+EXCLUDED_RECORD_TYPES = ["Credit", "Refund"]
+
 
 def parse_team_costs(results_by_time, tag_key="Team"):
     """Sum Cost Explorer results per team.
@@ -69,6 +73,7 @@ def get_costs(ce, start, end, tag_key):
             "Granularity": "DAILY",
             "Metrics": ["UnblendedCost"],
             "GroupBy": [{"Type": "TAG", "Key": tag_key}],
+            "Filter": {"Not": {"Dimensions": {"Key": "RECORD_TYPE", "Values": EXCLUDED_RECORD_TYPES}}},
         }
         if token:
             kwargs["NextPageToken"] = token

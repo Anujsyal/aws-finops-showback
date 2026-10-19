@@ -1,0 +1,3 @@
+# Lambda zips are hashed by Terraform; keep LF everywhere so Windows and CI
+# builds produce the same source_code_hash.
+lambdas/** text eol=lf

@@ -23,6 +23,7 @@ env:
   TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}
   TF_VAR_create_anomaly_monitor: ${{ vars.CREATE_ANOMALY_MONITOR || 'true' }}
   TF_VAR_existing_anomaly_monitor_arn: ${{ vars.EXISTING_ANOMALY_MONITOR_ARN }}
+  TF_VAR_activate_cost_allocation_tags: ${{ vars.ACTIVATE_COST_ALLOCATION_TAGS || 'false' }}
   AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
 
 defaults:
