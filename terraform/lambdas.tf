@@ -60,6 +60,8 @@ data "archive_file" "lambda" {
   source_dir  = "${path.module}/../lambdas/${each.key}"
   output_path = "${path.module}/.build/${each.key}.zip"
   excludes    = ["__pycache__"]
+  # Same file mode on Windows and Linux, so local and CI builds hash the same.
+  output_file_mode = "0644"
 }
 
 # ---- IAM --------------------------------------------------------------------
