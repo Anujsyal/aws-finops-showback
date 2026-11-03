@@ -182,8 +182,10 @@ AWS Showback Report (2026-10-10 to 2026-10-17)
 **Reports bucket, per-team buckets and the Terraform state bucket (ap-south-1)**
 ![S3 buckets](docs/s3-buckets.png)
 
-<!-- After cost allocation tags are active, add:
+**Weekly showback email: spend per team, with untagged spend called out**
 ![Showback email](docs/showback-email.png)
+
+<!-- After the Cost Explorer screenshot is taken, add:
 ![Cost Explorer by Team](docs/cost-explorer-team.png)
 -->
 
@@ -193,6 +195,8 @@ AWS Showback Report (2026-10-10 to 2026-10-17)
 - **Git-ignored tfvars do not reach CI.** Settings that differ from the defaults have to be passed to the pipeline as `TF_VAR_*` repo variables, or local and CI plans disagree.
 - **Cost allocation tags are not instant.** A tag can only be activated after it appears in billing data, so showback by team only works a day or two after the first deploy.
 - **Auto-remediation needs guard rails.** Cleanup is dry-run by default and honours a `Keep=true` tag, because deleting the wrong snapshot is worse than not cleaning up at all.
+- **Credits can hide real usage.** The account runs on AWS promotional credits, so net cost cancelled out and the showback report showed `$-0.0000`. Showback reports what teams used, not what the bill came to, so the Cost Explorer query now excludes the `Credit` and `Refund` record types.
+- **Zip hashes depend on more than your code.** Windows (CRLF) and CI (LF) packaged the same Lambda into different zips, so local and CI plans disagreed about whether it had changed. Pinning `eol=lf` in `.gitattributes` and `output_file_mode = "0644"` on `archive_file` made the builds hash the same.
 
 ## Running tests
 ```bash
