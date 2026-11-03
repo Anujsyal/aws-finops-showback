@@ -185,9 +185,8 @@ AWS Showback Report (2026-10-10 to 2026-10-17)
 **Weekly showback email: spend per team, with untagged spend called out**
 ![Showback email](docs/showback-email.png)
 
-<!-- After the Cost Explorer screenshot is taken, add:
-![Cost Explorer by Team](docs/cost-explorer-team.png)
--->
+**Spend per team, charted from the Cost Explorer API (credits and refunds excluded)**
+![Spend per team](docs/cost-by-team.png)
 
 ## What I learned
 - **GitHub's OIDC subject format changed.** The role trust policy matched `repo:owner/name:*`, but newer tokens send `repo:owner@<owner_id>/name@<repo_id>:...`, so the first pipeline run got `AccessDenied`. I found the real subject in CloudTrail (`AssumeRoleWithWebIdentity` events) and allowed both forms, pinning the IDs so a re-created repo with the same name cannot assume the role.
